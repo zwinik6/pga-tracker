@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In it to Winik Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px solid #00ff88;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a8dadc;
+            font-weight: 300;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #00ff88;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            font-family: 'Oswald', sans-serif;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .tab:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+
+        .tab.active {
+            background: #00ff88;
+            color: #0f2027;
+            border-color: #00ff88;
+            font-weight: 600;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(0, 255, 136, 0.15);
+        }
+
+        th {
+            font-family: 'Oswald', sans-serif;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: #00ff88;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+        }
+
+        td {
+            padding: 16px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tournament-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .major {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .signature {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            width: 100%;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .legend {
+            display: flex;
+            gap: 25px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.major {
+            background: #ffd700;
+        }
+
+        .legend-dot.signature {
+            background: #00d4ff;
+        }
+
+        .legend-dot.regular {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .purse-rank {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #00ff88;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #00ff88;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .instructions h3 {
+            font-family: 'Oswald', sans-serif;
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .instructions ul {
+            list-style-position: inside;
+            line-height: 1.8;
+            color: #a8dadc;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 12px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>In it to Winik Tracker</h1>
+            <p class="subtitle">Track your Buzz & Nap's Pool Picks</p>
+            <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <span id="sync-status" style="font-size: 0.85rem; opacity: 0.6; transition: opacity 0.3s;">Local only</span>
+                <button onclick="manualSync()" id="sync-button" style="padding: 8px 16px; background: linear-gradient(135deg, #00ff88, #00d4ff); border: none; color: #0f2027; font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                    ↻ Sync Now
+                </button>
+            </div>
+        </header>
+
+        <div class="quick-stats">
+            <div class="stat-card">
+                <h3>Buzz Winnings</h3>
+                <div class="stat-value" id="purse-total">$0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Nap's Entry 1</h3>
+                <div class="stat-value" id="survivor1-status" style="font-size: 1.3rem; color: #00ff88">ACTIVE</div>
+                <button onclick="resetEntryStatus(1)" style="margin-top: 10px; padding: 6px 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Reset Entry</button>
+            </div>
+            <div class="stat-card">
+                <h3>Nap's Entry 2</h3>
+                <div class="stat-value" id="survivor2-status" style="font-size: 1.3rem; color: #00ff88">ACTIVE</div>
+                <button onclick="resetEntryStatus(2)" style="margin-top: 10px; padding: 6px 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Reset Entry</button>
+            </div>
+            <div class="stat-card">
+                <h3>Weeks Played</h3>
+                <div class="stat-value" id="weeks-played">0 / 38</div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot major"></div>
+                <span>Major Championship</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot signature"></div>
+                <span>Signature Event ($20M)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot regular"></div>
+                <span>Regular Event</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('schedule')">Full Schedule</button>
+            <button class="tab" onclick="showTab('purse')">Buzz</button>
+            <button class="tab" onclick="showTab('survivor')">Nap's Pool</button>
+            <button class="tab" onclick="showTab('instructions')">Instructions</button>
+        </div>
+
+        <div id="schedule" class="content active">
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Date</th>
+                        <th>Tournament</th>
+                        <th>Course</th>
+                        <th>Location</th>
+                        <th>Purse</th>
+                        <th>Field</th>
+                        <th>Cut</th>
+                        <th>Winner '25</th>
+                        <th>Winner '24</th>
+                        <th>Winner '23</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="purse" class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Tournament</th>
+                        <th>Your Pick</th>
+                        <th>Finish</th>
+                        <th>Winnings</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="purse-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="survivor" class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Tournament</th>
+                        <th colspan="4" style="text-align: center; background: rgba(0, 255, 136, 0.2);">Entry 1</th>
+                        <th colspan="4" style="text-align: center; background: rgba(0, 212, 255, 0.2);">Entry 2</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Pick</th>
+                        <th>Made Cut?</th>
+                        <th>Finish</th>
+                        <th>Notes</th>
+                        <th>Pick</th>
+                        <th>Made Cut?</th>
+                        <th>Finish</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="survivor-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="instructions" class="content">
+            <div class="instructions">
+                <h3>How to Use This Tracker</h3>
+                <ul>
+                    <li><strong>Full Schedule:</strong> Complete 2026 PGA Tour schedule with purses, field sizes, and previous winners</li>
+                    <li><strong>Buzz:</strong> Enter your weekly pick and results. Can use each golfer TWICE during the season</li>
+                    <li><strong>Nap's Pool:</strong> Enter picks for both entries. Can only use each golfer ONCE per entry</li>
+                    <li><strong>Majors (gold):</strong> Masters, PGA, US Open, Open Championship</li>
+                    <li><strong>Signature Events (blue):</strong> $20M purse, strongest fields</li>
+                    <li><strong>This tracker saves your data locally</strong> - bookmark this page and keep it open</li>
+                </ul>
+            </div>
+
+            <div class="instructions">
+                <h3>Pool Rules</h3>
+                <ul>
+                    <li><strong>Buzz:</strong> Pick one golfer per week. You get points equal to their prize money. Can use golfers twice.</li>
+                    <li><strong>Nap's Pool:</strong> Pick one golfer per week to make the cut. Can only use each golfer once per entry. You have two entries with one buyback each.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GOOGLE SHEETS CONFIGURATION =====
+        // STEP 1: Set your Google Apps Script Web App URL here
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbBfTZnNxX8A-_fAEwo9c1mFIhzll0Pz8BdKkzQQwfcwE10zgR8NXR6bHmSRUz9l37Xw/exec';
+        
+        // STEP 2: Set your unique user ID (same as in Settings sheet cell B1)
+        const USER_ID = 'zach_winik';
+        
+        // STEP 3: Enable/disable Google Sheets sync
+        const ENABLE_GOOGLE_SYNC = GOOGLE_SCRIPT_URL && USER_ID; // Auto-enabled if both are set
+        
+        // Sync status
+        let isSyncing = false;
+        let lastSyncTime = null;
+        
+        // ===== END CONFIGURATION =====
+        
+        // Load any custom golfers from previous sessions
+        const savedCustomGolfers = JSON.parse(localStorage.getItem('customGolfers') || '[]');
+        
+        const baseGolfers = [
+            "Scottie Scheffler", "Rory McIlroy", "Xander Schauffele", "Ludvig Åberg", "Collin Morikawa",
+            "Bryson DeChambeau", "Hideki Matsuyama", "Patrick Cantlay", "Viktor Hovland", "Wyndham Clark",
+            "Jon Rahm", "Brooks Koepka", "Dustin Johnson", "Cameron Smith", "Matt Fitzpatrick",
+            "Tommy Fleetwood", "Max Homa", "Tony Finau", "Jordan Spieth", "Justin Thomas",
+            "Sam Burns", "Sahith Theegala", "Russell Henley", "Brian Harman", "Tom Kim",
+            "Keegan Bradley", "Justin Rose", "Robert MacIntyre", "Akshay Bhatia", "Shane Lowry",
+            "Sungjae Im", "Corey Conners", "Billy Horschel", "Adam Scott", "Jason Day",
+            "Min Woo Lee", "Aaron Rai", "Taylor Pendrith", "Sepp Straka", "J.T. Poston",
+            "Denny McCarthy", "Nick Dunlap", "Chris Kirk", "Eric Cole", "Austin Eckroat",
+            "Matthieu Pavon", "Si Woo Kim", "Will Zalatoris", "Cameron Young", "Nick Taylor",
+            "Davis Thompson", "Luke List", "Christiaan Bezuidenhout", "Harris English", "Ben Griffin",
+            "Adam Hadwin", "Mackenzie Hughes", "Keith Mitchell", "Andrew Putnam", "Alex Noren",
+            "Ryan Fox", "Kurt Kitayama", "Emiliano Grillo", "Taylor Moore", "Stephan Jaeger",
+            "Patrick Rodgers", "Gary Woodland", "Rickie Fowler", "Webb Simpson", "Kevin Kisner",
+            "Lucas Glover", "Adam Schenk", "Maverick McNealy", "Mark Hubbard", "Nick Hardy",
+            "K.H. Lee", "Byeong Hun An", "Cam Davis", "Lee Hodges", "Erik van Rooyen",
+            "Thomas Detry", "Nico Echavarria", "Matt Wallace", "Victor Perez", "Thorbjorn Olesen",
+            "Adrian Meronk", "Tyrrell Hatton", "Dean Burmester", "Joaquin Niemann", "Abraham Ancer",
+            "Sebastian Munoz", "J.J. Spaun", "Aldrich Potgieter", "Michael Thorbjornsen", "Joe Highsmith",
+            "Karl Vilips", "Chris Gotterup", "Brian Campbell", "Nate Lashley", "Grayson Murray"
+        ];
+        
+        // Combine and remove duplicates using Set
+        const golfers = [...new Set([...baseGolfers, ...savedCustomGolfers])].sort();
+
+        const tournaments = [
+            {week: 1, date: "Jan 15-18", name: "Sony Open in Hawaii", course: "Waialae CC", location: "Honolulu, HI", purse: "$9.6M", field: 120, cut: "Top 65+", type: "regular", winner25: "Nick Taylor", winner24: "Grayson Murray", winner23: "Si Woo Kim"},
+            {week: 2, date: "Jan 22-25", name: "The American Express", course: "PGA West Stadium", location: "La Quinta, CA", purse: "$9.2M", field: 156, cut: "Top 65+", type: "regular", winner25: "Sepp Straka", winner24: "Nick Dunlap", winner23: "Jon Rahm"},
+            {week: 3, date: "Jan 29-Feb 1", name: "Farmers Insurance Open", course: "Torrey Pines", location: "San Diego, CA", purse: "$9.6M", field: 156, cut: "Top 65+", type: "regular", winner25: "Harris English", winner24: "Matthieu Pavon", winner23: "Max Homa"},
+            {week: 4, date: "Feb 5-8", name: "Waste Management Phoenix Open", course: "TPC Scottsdale", location: "Scottsdale, AZ", purse: "$9.6M", field: 156, cut: "Top 65+", type: "regular", winner25: "Thomas Detry", winner24: "Nick Taylor", winner23: "Scottie Scheffler"},
+            {week: 5, date: "Feb 12-15", name: "ATT Pebble Beach National Pro-Am", course: "Pebble Beach", location: "Pebble Beach, CA", purse: "$20M", field: 80, cut: "No cut", type: "signature", winner25: "Rory McIlroy", winner24: "Wyndham Clark", winner23: "Justin Rose"},
+            {week: 6, date: "Feb 19-22", name: "Genesis Invitational", course: "Riviera CC", location: "Pacific Palisades, CA", purse: "$20M", field: 72, cut: "Top 50+", type: "signature", winner25: "Ludvig Åberg", winner24: "Hideki Matsuyama", winner23: "Jon Rahm"},
+            {week: 7, date: "Feb 26-Mar 1", name: "Cognizant Classic", course: "PGA National", location: "Palm Beach Gardens, FL", purse: "$9.6M", field: 156, cut: "Top 65+", type: "regular", winner25: "Joe Highsmith", winner24: "Shane Lowry", winner23: "Chris Kirk"},
+            {week: 8, date: "Mar 5-8", name: "Arnold Palmer Invitational", course: "Bay Hill Club", location: "Orlando, FL", purse: "$20M", field: 72, cut: "Top 50+", type: "signature", winner25: "Russell Henley", winner24: "Scottie Scheffler", winner23: "Kurt Kitayama"},
+            {week: 8, date: "Mar 5-8", name: "Puerto Rico Open", course: "Grand Reserve", location: "Rio Grande, PR", purse: "$4M", field: 132, cut: "Top 65+", type: "regular", winner25: "Karl Vilips", winner24: "Nico Echavarria", winner23: "Nico Echavarria"},
+            {week: 9, date: "Mar 12-15", name: "THE PLAYERS Championship", course: "TPC Sawgrass", location: "Ponte Vedra Beach, FL", purse: "$25M", field: 144, cut: "Top 65+", type: "signature", winner25: "Rory McIlroy", winner24: "Scottie Scheffler", winner23: "Scottie Scheffler"},
+            {week: 10, date: "Mar 19-22", name: "Valspar Championship", course: "Copperhead Course", location: "Palm Harbor, FL", purse: "$9.1M", field: 156, cut: "Top 65+", type: "regular", winner25: "Viktor Hovland", winner24: "Jordan Spieth", winner23: "Taylor Moore"},
+            {week: 11, date: "Mar 26-29", name: "Texas Children's Houston Open", course: "Memorial Park", location: "Houston, TX", purse: "$9.9M", field: 156, cut: "Top 65+", type: "regular", winner25: "Min Woo Lee", winner24: "Tony Finau", winner23: "Tony Finau"},
+            {week: 12, date: "Apr 2-5", name: "Valero Texas Open", course: "TPC San Antonio", location: "San Antonio, TX", purse: "$9.8M", field: 156, cut: "Top 65+", type: "regular", winner25: "Brian Harman", winner24: "Akshay Bhatia", winner23: "Corey Conners"},
+            {week: 13, date: "Apr 9-12", name: "The Masters", course: "Augusta National", location: "Augusta, GA", purse: "$21M", field: 95, cut: "Top 50+", type: "major", winner25: "Rory McIlroy", winner24: "Scottie Scheffler", winner23: "Jon Rahm"},
+            {week: 14, date: "Apr 16-19", name: "RBC Heritage", course: "Harbour Town GL", location: "Hilton Head, SC", purse: "$20M", field: 80, cut: "No cut", type: "signature", winner25: "Justin Thomas", winner24: "Scottie Scheffler", winner23: "Matt Fitzpatrick"},
+            {week: 15, date: "Apr 23-26", name: "Zurich Classic of New Orleans", course: "TPC Louisiana", location: "Avondale, LA", purse: "$9.5M", field: 80, cut: "Top 33+", type: "regular", winner25: "Rory McIlroy/Shane Lowry", winner24: "Patrick Cantlay/Xander Schauffele", winner23: "Davis Riley/Nick Hardy"},
+            {week: 16, date: "Apr 30-May 3", name: "Cadillac Championship", course: "Trump Doral", location: "Miami, FL", purse: "$20M", field: 80, cut: "No cut", type: "signature", winner25: "New Event", winner24: "N/A", winner23: "N/A"},
+            {week: 17, date: "May 7-10", name: "Truist Championship", course: "Quail Hollow", location: "Charlotte, NC", purse: "$20M", field: 72, cut: "Top 50+", type: "signature", winner25: "Billy Horschel", winner24: "Xander Schauffele", winner23: "Wyndham Clark"},
+            {week: 17, date: "May 7-10", name: "Myrtle Beach Classic", course: "Dunes G&B Club", location: "Myrtle Beach, SC", purse: "$4M", field: 132, cut: "Top 65+", type: "regular", winner25: "Michael Thorbjornsen", winner24: "N/A", winner23: "N/A"},
+            {week: 18, date: "May 14-17", name: "PGA Championship", course: "Aronimink GC", location: "Newtown Square, PA", purse: "$20M", field: 156, cut: "Top 70+", type: "major", winner25: "Scottie Scheffler", winner24: "Xander Schauffele", winner23: "Brooks Koepka"},
+            {week: 19, date: "May 21-24", name: "CJ Cup Honoring Byron Nelson", course: "TPC Craig Ranch", location: "McKinney, TX", purse: "$10.3M", field: 156, cut: "Top 65+", type: "regular", winner25: "Taylor Pendrith", winner24: "K.H. Lee", winner23: "Lee Hodges"},
+            {week: 20, date: "May 28-31", name: "Charles Schwab Challenge", course: "Colonial CC", location: "Fort Worth, TX", purse: "$9.9M", field: 120, cut: "Top 65+", type: "regular", winner25: "Ben Griffin", winner24: "Scottie Scheffler", winner23: "Emiliano Grillo"},
+            {week: 21, date: "Jun 4-7", name: "The Memorial Tournament", course: "Muirfield Village", location: "Dublin, OH", purse: "$20M", field: 72, cut: "Top 50+", type: "signature", winner25: "Scottie Scheffler", winner24: "Scottie Scheffler", winner23: "Viktor Hovland"},
+            {week: 22, date: "Jun 11-14", name: "RBC Canadian Open", course: "TPC Toronto", location: "Caledon, ON", purse: "$9.8M", field: 156, cut: "Top 65+", type: "regular", winner25: "Ryan Fox", winner24: "Robert MacIntyre", winner23: "Nick Taylor"},
+            {week: 23, date: "Jun 18-21", name: "U.S. Open", course: "Shinnecock Hills", location: "Southampton, NY", purse: "$21.5M", field: 156, cut: "Top 60+", type: "major", winner25: "J.J. Spaun", winner24: "Bryson DeChambeau", winner23: "Wyndham Clark"},
+            {week: 24, date: "Jun 25-28", name: "Travelers Championship", course: "TPC River Highlands", location: "Cromwell, CT", purse: "$20M", field: 80, cut: "No cut", type: "signature", winner25: "Keegan Bradley", winner24: "Scottie Scheffler", winner23: "Keegan Bradley"},
+            {week: 25, date: "Jul 2-5", name: "John Deere Classic", course: "TPC Deere Run", location: "Silvis, IL", purse: "$8.8M", field: 156, cut: "Top 65+", type: "regular", winner25: "Brian Campbell", winner24: "Davis Thompson", winner23: "Sepp Straka"},
+            {week: 26, date: "Jul 9-12", name: "Genesis Scottish Open", course: "Renaissance Club", location: "North Berwick, Scotland", purse: "$9M", field: 156, cut: "Top 65+", type: "regular", winner25: "Chris Gotterup", winner24: "Robert MacIntyre", winner23: "Rory McIlroy"},
+            {week: 26, date: "Jul 9-12", name: "ISCO Championship", course: "Hurstbourne CC", location: "Louisville, KY", purse: "$4M", field: 132, cut: "Top 65+", type: "regular", winner25: "New Event", winner24: "N/A", winner23: "N/A"},
+            {week: 27, date: "Jul 16-19", name: "The Open Championship", course: "Royal Birkdale", location: "Southport, England", purse: "$20M", field: 156, cut: "Top 70+", type: "major", winner25: "Xander Schauffele", winner24: "Xander Schauffele", winner23: "Brian Harman"},
+            {week: 27, date: "Jul 16-19", name: "Corales Puntacana Championship", course: "Corales GC", location: "Punta Cana, DR", purse: "$4M", field: 132, cut: "Top 65+", type: "regular", winner25: "Nate Lashley", winner24: "Matt Wallace", winner23: "Matt Wallace"},
+            {week: 28, date: "Jul 23-26", name: "3M Open", course: "TPC Twin Cities", location: "Blaine, MN", purse: "$8.8M", field: 156, cut: "Top 65+", type: "regular", winner25: "Kurt Kitayama", winner24: "Maverick McNealy", winner23: "Lee Hodges"},
+            {week: 29, date: "Jul 30-Aug 2", name: "Rocket Mortgage Classic", course: "Detroit GC", location: "Detroit, MI", purse: "$10M", field: 156, cut: "Top 65+", type: "regular", winner25: "Aldrich Potgieter", winner24: "Cam Davis", winner23: "Rickie Fowler"},
+            {week: 30, date: "Aug 6-9", name: "Wyndham Championship", course: "Sedgefield CC", location: "Greensboro, NC", purse: "$8.5M", field: 156, cut: "Top 65+", type: "regular", winner25: "Cameron Young", winner24: "Aaron Rai", winner23: "Lucas Glover"},
+            {week: 31, date: "Aug 13-16", name: "WGC - FedEx St. Jude Invitational", course: "TPC Southwind", location: "Memphis, TN", purse: "$20M", field: 70, cut: "No cut", type: "playoff", winner25: "Justin Rose", winner24: "Hideki Matsuyama", winner23: "Lucas Glover"},
+            {week: 32, date: "Aug 20-23", name: "BMW Championship", course: "Bellerive CC", location: "St. Louis, MO", purse: "$20M", field: 50, cut: "No cut", type: "playoff", winner25: "Scottie Scheffler", winner24: "Keegan Bradley", winner23: "Viktor Hovland"},
+            {week: 33, date: "Aug 27-30", name: "The Tour Championship", course: "East Lake GC", location: "Atlanta, GA", purse: "$40M", field: 30, cut: "No cut", type: "playoff", winner25: "Tommy Fleetwood", winner24: "Scottie Scheffler", winner23: "Viktor Hovland"},
+        ];
+
+        function loadData() {
+            const purseData = JSON.parse(localStorage.getItem('purseData') || '{}');
+            const survivor1Data = JSON.parse(localStorage.getItem('survivor1Data') || '{}');
+            const survivor2Data = JSON.parse(localStorage.getItem('survivor2Data') || '{}');
+            return { purseData, survivor1Data, survivor2Data };
+        }
+
+        async function loadFromGoogleSheets() {
+            if (!ENABLE_GOOGLE_SYNC) return false;
+            
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=load&userId=${USER_ID}`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // Save to localStorage
+                    localStorage.setItem('purseData', JSON.stringify(result.data.purseData || {}));
+                    localStorage.setItem('survivor1Data', JSON.stringify(result.data.survivor1Data || {}));
+                    localStorage.setItem('survivor2Data', JSON.stringify(result.data.survivor2Data || {}));
+                    
+                    if (result.data.survivor1Status) {
+                        localStorage.setItem('survivor1Status', result.data.survivor1Status);
+                    }
+                    if (result.data.survivor2Status) {
+                        localStorage.setItem('survivor2Status', result.data.survivor2Status);
+                    }
+                    
+                    lastSyncTime = new Date();
+                    updateSyncStatus('Synced successfully');
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error loading from Google Sheets:', error);
+                updateSyncStatus('Sync failed - using local data');
+                return false;
+            }
+        }
+
+        function saveData(type, data) {
+            localStorage.setItem(type + 'Data', JSON.stringify(data));
+            updateStats();
+            
+            // Auto-sync to Google Sheets if enabled
+            if (ENABLE_GOOGLE_SYNC) {
+                debouncedSyncToGoogleSheets();
+            }
+        }
+
+        // Debounce sync to avoid too many requests
+        let syncTimeout;
+        function debouncedSyncToGoogleSheets() {
+            clearTimeout(syncTimeout);
+            syncTimeout = setTimeout(() => syncToGoogleSheets(), 2000); // Wait 2 seconds after last change
+        }
+
+        async function syncToGoogleSheets() {
+            if (!ENABLE_GOOGLE_SYNC || isSyncing) return;
+            
+            isSyncing = true;
+            updateSyncStatus('Syncing...');
+            
+            try {
+                const data = {
+                    action: 'save',
+                    userId: USER_ID,
+                    data: {
+                        purseData: JSON.parse(localStorage.getItem('purseData') || '{}'),
+                        survivor1Data: JSON.parse(localStorage.getItem('survivor1Data') || '{}'),
+                        survivor2Data: JSON.parse(localStorage.getItem('survivor2Data') || '{}'),
+                        survivor1Status: localStorage.getItem('survivor1Status') || 'ACTIVE',
+                        survivor2Status: localStorage.getItem('survivor2Status') || 'ACTIVE'
+                    }
+                };
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    lastSyncTime = new Date();
+                    updateSyncStatus('Synced ' + formatTime(lastSyncTime));
+                } else {
+                    updateSyncStatus('Sync failed');
+                }
+            } catch (error) {
+                console.error('Error syncing to Google Sheets:', error);
+                updateSyncStatus('Sync error');
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        async function loadFromGoogleSheets() {
+            if (!ENABLE_GOOGLE_SYNC) return false;
+            
+            try {
+                updateSyncStatus('Loading from cloud...');
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=load&userId=${USER_ID}`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // Save to localStorage
+                    localStorage.setItem('purseData', JSON.stringify(result.data.purseData || {}));
+                    localStorage.setItem('survivor1Data', JSON.stringify(result.data.survivor1Data || {}));
+                    localStorage.setItem('survivor2Data', JSON.stringify(result.data.survivor2Data || {}));
+                    
+                    if (result.data.survivor1Status) {
+                        localStorage.setItem('survivor1Status', result.data.survivor1Status);
+                    }
+                    if (result.data.survivor2Status) {
+                        localStorage.setItem('survivor2Status', result.data.survivor2Status);
+                    }
+                    
+                    lastSyncTime = new Date();
+                    updateSyncStatus('Loaded from cloud');
+                    
+                    // Refresh displays
+                    updateStats();
+                    renderSchedule();
+                    
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error loading from Google Sheets:', error);
+                updateSyncStatus('Load failed - using local data');
+                return false;
+            }
+        }
+
+        function updateSyncStatus(message) {
+            const syncStatus = document.getElementById('sync-status');
+            if (syncStatus) {
+                syncStatus.textContent = message;
+                syncStatus.style.opacity = '1';
+                setTimeout(() => { 
+                    if (syncStatus.textContent === message) {
+                        syncStatus.style.opacity = '0.6';
+                    }
+                }, 2000);
+            }
+        }
+
+        function formatTime(date) {
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000); // seconds
+            
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return date.toLocaleDateString();
+        }
+
+
+        function updateStats() {
+            const { purseData } = loadData();
+            let total = 0;
+            let weeks = 0;
+            
+            Object.values(purseData).forEach(entry => {
+                if (entry.winnings) {
+                    total += parseFloat(entry.winnings) || 0;
+                    weeks++;
+                }
+            });
+            
+            document.getElementById('purse-total').textContent = '$' + total.toLocaleString();
+            document.getElementById('weeks-played').textContent = weeks + ' / 38';
+            
+            // Update survivor status display
+            const status1 = localStorage.getItem('survivor1Status') || 'ACTIVE';
+            const status2 = localStorage.getItem('survivor2Status') || 'ACTIVE';
+            
+            const entry1Status = document.getElementById('survivor1-status');
+            const entry2Status = document.getElementById('survivor2-status');
+            
+            if (entry1Status) {
+                if (status1 === 'ELIMINATED') {
+                    entry1Status.textContent = 'ELIMINATED';
+                    entry1Status.style.color = '#ff4444';
+                } else if (status1 === 'BUYBACK_USED') {
+                    entry1Status.textContent = 'ACTIVE (Buyback Used)';
+                    entry1Status.style.color = '#ffa500';
+                } else {
+                    entry1Status.textContent = 'ACTIVE';
+                    entry1Status.style.color = '#00ff88';
+                }
+            }
+            
+            if (entry2Status) {
+                if (status2 === 'ELIMINATED') {
+                    entry2Status.textContent = 'ELIMINATED';
+                    entry2Status.style.color = '#ff4444';
+                } else if (status2 === 'BUYBACK_USED') {
+                    entry2Status.textContent = 'ACTIVE (Buyback Used)';
+                    entry2Status.style.color = '#ffa500';
+                } else {
+                    entry2Status.textContent = 'ACTIVE';
+                    entry2Status.style.color = '#00ff88';
+                }
+            }
+        }
+
+        function renderSchedule() {
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = tournaments.map((t, i) => {
+                let className = t.type === 'major' ? 'major' : (t.type === 'signature' ? 'signature' : '');
+                return `
+                    <tr>
+                        <td>${t.week}</td>
+                        <td>${t.date}</td>
+                        <td class="tournament-name ${className}">${t.name}</td>
+                        <td>${t.course}</td>
+                        <td>${t.location}</td>
+                        <td>${t.purse}</td>
+                        <td>${t.field}</td>
+                        <td>${t.cut}</td>
+                        <td>${t.winner25}</td>
+                        <td>${t.winner24}</td>
+                        <td>${t.winner23}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPurse() {
+            const tbody = document.getElementById('purse-body');
+            const { purseData } = loadData();
+            
+            tbody.innerHTML = tournaments.map((t, i) => {
+                const data = purseData[i] || {};
+                const isCustom = data.pick && !golfers.includes(data.pick);
+                
+                // Create golfer dropdown options
+                const golferOptions = '<option value="">Select Golfer</option>' + 
+                    golfers.map(g => `<option value="${g}" ${data.pick === g ? 'selected' : ''}>${g}</option>`).join('') +
+                    '<option value="__CUSTOM__">Other (type name)</option>';
+                
+                return `
+                    <tr>
+                        <td>${t.week}</td>
+                        <td>${t.name}</td>
+                        <td>
+                            ${isCustom ? `
+                                <input type="text" value="${data.pick || ''}" 
+                                    onchange="updatePurse(${i}, 'pick', this.value)" 
+                                    placeholder="Type golfer name" 
+                                    style="width: 100%;">
+                                <button onclick="switchToDropdownPurse(${i})" 
+                                    style="font-size: 0.8rem; margin-top: 2px; padding: 2px 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 4px; cursor: pointer;">
+                                    ↻ Use Dropdown
+                                </button>
+                            ` : `
+                                <select onchange="if(this.value==='__CUSTOM__'){switchToCustomPurse(${i})}else{updatePurse(${i},'pick',this.value)}" style="width: 100%;">
+                                    ${golferOptions}
+                                </select>
+                            `}
+                        </td>
+                        <td><input type="text" placeholder="T5, CUT, etc" value="${data.finish || ''}" onchange="updatePurse(${i}, 'finish', this.value)" style="width: 80px;"></td>
+                        <td><input type="number" placeholder="$" value="${data.winnings || ''}" onchange="updatePurse(${i}, 'winnings', this.value)" style="width: 120px;"></td>
+                        <td><textarea placeholder="Notes" onchange="updatePurse(${i}, 'notes', this.value)" style="width: 100%; min-height: 60px; resize: vertical;">${data.notes || ''}</textarea></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchToCustomPurse(index) {
+            const { purseData } = loadData();
+            if (!purseData[index]) purseData[index] = {};
+            purseData[index].pick = '__TYPING__'; // Flag to show text input
+            saveData('purse', purseData);
+            renderPurse();
+            // Focus the input after render
+            setTimeout(() => {
+                const input = document.querySelector(`#purse-body tr:nth-child(${index + 1}) input[type="text"]`);
+                if (input) input.focus();
+            }, 0);
+        }
+
+        function switchToDropdownPurse(index) {
+            const { purseData } = loadData();
+            if (purseData[index]) {
+                purseData[index].pick = '';
+            }
+            saveData('purse', purseData);
+            renderPurse();
+        }
+
+        function renderSurvivor() {
+            const tbody = document.getElementById('survivor-body');
+            const survivor1Data = loadData().survivor1Data;
+            const survivor2Data = loadData().survivor2Data;
+            
+            // Check elimination status
+            const status1 = localStorage.getItem('survivor1Status') || 'ACTIVE';
+            const status2 = localStorage.getItem('survivor2Status') || 'ACTIVE';
+            const isEliminated1 = status1 === 'ELIMINATED';
+            const isEliminated2 = status2 === 'ELIMINATED';
+            
+            tbody.innerHTML = tournaments.map((t, i) => {
+                const entry1 = survivor1Data[i] || {};
+                const entry2 = survivor2Data[i] || {};
+                
+                const isCustom1 = entry1.pick && !golfers.includes(entry1.pick);
+                const isCustom2 = entry2.pick && !golfers.includes(entry2.pick);
+                
+                // Create golfer dropdown options for entry 1
+                const golferOptions1 = '<option value="">Select Golfer</option>' + 
+                    golfers.map(g => `<option value="${g}" ${entry1.pick === g ? 'selected' : ''}>${g}</option>`).join('') +
+                    '<option value="__CUSTOM__">Other (type name)</option>';
+                
+                // Create golfer dropdown options for entry 2
+                const golferOptions2 = '<option value="">Select Golfer</option>' + 
+                    golfers.map(g => `<option value="${g}" ${entry2.pick === g ? 'selected' : ''}>${g}</option>`).join('') +
+                    '<option value="__CUSTOM__">Other (type name)</option>';
+                
+                // Disable style for eliminated entries
+                const disabledStyle1 = isEliminated1 ? 'opacity: 0.3; pointer-events: none; background: rgba(255,0,0,0.1);' : '';
+                const disabledStyle2 = isEliminated2 ? 'opacity: 0.3; pointer-events: none; background: rgba(255,0,0,0.1);' : '';
+                
+                return `
+                    <tr>
+                        <td>${t.week}</td>
+                        <td>${t.name}</td>
+                        <td style="${disabledStyle1}">
+                            ${isCustom1 ? `
+                                <input type="text" value="${entry1.pick === '__TYPING__' ? '' : entry1.pick}" 
+                                    onchange="updateSurvivor(1, ${i}, 'pick', this.value)" 
+                                    placeholder="Type golfer name" 
+                                    style="width: 140px;" ${isEliminated1 ? 'disabled' : ''}>
+                                <button onclick="switchToDropdownSurvivor(1, ${i})" 
+                                    style="font-size: 0.75rem; margin-top: 2px; padding: 2px 4px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 4px; cursor: pointer;" ${isEliminated1 ? 'disabled' : ''}>
+                                    ↻
+                                </button>
+                            ` : `
+                                <select onchange="if(this.value==='__CUSTOM__'){switchToCustomSurvivor(1,${i})}else{updateSurvivor(1,${i},'pick',this.value)}" style="width: 140px;" ${isEliminated1 ? 'disabled' : ''}>
+                                    ${golferOptions1}
+                                </select>
+                            `}
+                        </td>
+                        <td style="${disabledStyle1}">
+                            <select onchange="updateSurvivor(1, ${i}, 'made_cut', this.value)" style="width: 80px;" ${isEliminated1 ? 'disabled' : ''}>
+                                <option value="" ${!entry1.made_cut ? 'selected' : ''}>-</option>
+                                <option value="YES" ${entry1.made_cut === 'YES' ? 'selected' : ''}>YES</option>
+                                <option value="NO" ${entry1.made_cut === 'NO' ? 'selected' : ''}>NO</option>
+                            </select>
+                        </td>
+                        <td style="${disabledStyle1}"><input type="text" placeholder="Finish" value="${entry1.finish || ''}" onchange="updateSurvivor(1, ${i}, 'finish', this.value)" style="width: 70px;" ${isEliminated1 ? 'disabled' : ''}></td>
+                        <td style="${disabledStyle1}"><textarea placeholder="Notes" onchange="updateSurvivor(1, ${i}, 'notes', this.value)" style="width: 120px; min-height: 50px; resize: vertical;" ${isEliminated1 ? 'disabled' : ''}>${entry1.notes || ''}</textarea></td>
+                        <td style="${disabledStyle2}">
+                            ${isCustom2 ? `
+                                <input type="text" value="${entry2.pick === '__TYPING__' ? '' : entry2.pick}" 
+                                    onchange="updateSurvivor(2, ${i}, 'pick', this.value)" 
+                                    placeholder="Type golfer name" 
+                                    style="width: 140px;" ${isEliminated2 ? 'disabled' : ''}>
+                                <button onclick="switchToDropdownSurvivor(2, ${i})" 
+                                    style="font-size: 0.75rem; margin-top: 2px; padding: 2px 4px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 4px; cursor: pointer;" ${isEliminated2 ? 'disabled' : ''}>
+                                    ↻
+                                </button>
+                            ` : `
+                                <select onchange="if(this.value==='__CUSTOM__'){switchToCustomSurvivor(2,${i})}else{updateSurvivor(2,${i},'pick',this.value)}" style="width: 140px;" ${isEliminated2 ? 'disabled' : ''}>
+                                    ${golferOptions2}
+                                </select>
+                            `}
+                        </td>
+                        <td style="${disabledStyle2}">
+                            <select onchange="updateSurvivor(2, ${i}, 'made_cut', this.value)" style="width: 80px;" ${isEliminated2 ? 'disabled' : ''}>
+                                <option value="" ${!entry2.made_cut ? 'selected' : ''}>-</option>
+                                <option value="YES" ${entry2.made_cut === 'YES' ? 'selected' : ''}>YES</option>
+                                <option value="NO" ${entry2.made_cut === 'NO' ? 'selected' : ''}>NO</option>
+                            </select>
+                        </td>
+                        <td style="${disabledStyle2}"><input type="text" placeholder="Finish" value="${entry2.finish || ''}" onchange="updateSurvivor(2, ${i}, 'finish', this.value)" style="width: 70px;" ${isEliminated2 ? 'disabled' : ''}></td>
+                        <td style="${disabledStyle2}"><textarea placeholder="Notes" onchange="updateSurvivor(2, ${i}, 'notes', this.value)" style="width: 120px; min-height: 50px; resize: vertical;" ${isEliminated2 ? 'disabled' : ''}>${entry2.notes || ''}</textarea></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchToCustomSurvivor(entryNum, index) {
+            const key = `survivor${entryNum}`;
+            const data = loadData()[key + 'Data'];
+            if (!data[index]) data[index] = {};
+            data[index].pick = '__TYPING__'; // Flag to show text input
+            saveData(key, data);
+            renderSurvivor();
+            // Focus the input after render
+            setTimeout(() => {
+                const row = document.querySelector(`#survivor-body tr:nth-child(${index + 1})`);
+                if (row) {
+                    const input = entryNum === 1 ? 
+                        row.querySelector('td:nth-child(3) input[type="text"]') : 
+                        row.querySelector('td:nth-child(7) input[type="text"]');
+                    if (input) input.focus();
+                }
+            }, 0);
+        }
+
+        function switchToDropdownSurvivor(entryNum, index) {
+            const key = `survivor${entryNum}`;
+            const data = loadData()[key + 'Data'];
+            if (data[index]) {
+                data[index].pick = '';
+            }
+            saveData(key, data);
+            renderSurvivor();
+        }
+
+        function updatePurse(index, field, value) {
+            const { purseData } = loadData();
+            if (!purseData[index]) purseData[index] = {};
+            purseData[index][field] = value;
+            
+            // If adding a custom golfer name, add it to the custom golfers list
+            if (field === 'pick' && value && value !== '__TYPING__' && !baseGolfers.includes(value)) {
+                const savedCustom = JSON.parse(localStorage.getItem('customGolfers') || '[]');
+                if (!savedCustom.includes(value)) {
+                    savedCustom.push(value);
+                    savedCustom.sort();
+                    localStorage.setItem('customGolfers', JSON.stringify(savedCustom));
+                    
+                    // Add to current golfers array if not already there
+                    if (!golfers.includes(value)) {
+                        golfers.push(value);
+                        golfers.sort();
+                    }
+                }
+            }
+            
+            saveData('purse', purseData);
+        }
+
+        function updateSurvivor(entryNum, index, field, value) {
+            const key = `survivor${entryNum}`;
+            const data = loadData()[key + 'Data'];
+            if (!data[index]) data[index] = {};
+            
+            // Check if this is a made_cut field being set to NO
+            if (field === 'made_cut' && value === 'NO') {
+                const statusKey = `survivor${entryNum}Status`;
+                const currentStatus = localStorage.getItem(statusKey) || 'ACTIVE';
+                
+                // Check if this golfer already had NO recorded (prevent double prompt)
+                const wasAlreadyNo = data[index].made_cut === 'NO';
+                
+                if (!wasAlreadyNo && currentStatus === 'ACTIVE') {
+                    // First miss - prompt for buyback
+                    const useBuyback = confirm(`Entry ${entryNum} missed the cut! Do you want to use your buyback?`);
+                    
+                    if (useBuyback) {
+                        localStorage.setItem(statusKey, 'BUYBACK_USED');
+                        alert(`Buyback activated for Entry ${entryNum}! You get one more chance.`);
+                    } else {
+                        localStorage.setItem(statusKey, 'ELIMINATED');
+                        alert(`Entry ${entryNum} is now eliminated.`);
+                    }
+                    
+                    // Save the data first
+                    data[index][field] = value;
+                    saveData(key, data);
+                    
+                    // Then update the display
+                    updateStats();
+                    renderSurvivor();
+                    return; // Exit early since we already saved
+                } else if (!wasAlreadyNo && currentStatus === 'BUYBACK_USED') {
+                    // Second miss - eliminated
+                    localStorage.setItem(statusKey, 'ELIMINATED');
+                    alert(`Entry ${entryNum} is now eliminated. No more buybacks available.`);
+                    
+                    // Save the data first
+                    data[index][field] = value;
+                    saveData(key, data);
+                    
+                    // Then update the display
+                    updateStats();
+                    renderSurvivor();
+                    return; // Exit early since we already saved
+                }
+            }
+            
+            // If changing from NO to something else, allow it (undo mistake)
+            if (field === 'made_cut' && data[index].made_cut === 'NO' && value !== 'NO') {
+                // Allow the change without triggering elimination logic
+            }
+            
+            data[index][field] = value;
+            
+            // If adding a custom golfer name, add it to the custom golfers list
+            if (field === 'pick' && value && value !== '__TYPING__' && !baseGolfers.includes(value)) {
+                const savedCustom = JSON.parse(localStorage.getItem('customGolfers') || '[]');
+                if (!savedCustom.includes(value)) {
+                    savedCustom.push(value);
+                    savedCustom.sort();
+                    localStorage.setItem('customGolfers', JSON.stringify(savedCustom));
+                    
+                    // Add to current golfers array if not already there
+                    if (!golfers.includes(value)) {
+                        golfers.push(value);
+                        golfers.sort();
+                    }
+                }
+            }
+            
+            saveData(key, data);
+        }
+
+        function resetEntryStatus(entryNum) {
+            if (confirm(`Reset Entry ${entryNum} status back to ACTIVE with buyback available?`)) {
+                localStorage.setItem(`survivor${entryNum}Status`, 'ACTIVE');
+                updateStats();
+                renderSurvivor();
+                alert(`Entry ${entryNum} has been reset to ACTIVE.`);
+            }
+        }
+
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+
+            if (tabName === 'purse') renderPurse();
+            if (tabName === 'survivor') renderSurvivor();
+        }
+
+        async function manualSync() {
+            const button = document.getElementById('sync-button');
+            if (!ENABLE_GOOGLE_SYNC) {
+                alert('Google Sheets sync is not configured. Please set GOOGLE_SCRIPT_URL and USER_ID at the top of this file.');
+                return;
+            }
+            
+            button.disabled = true;
+            button.textContent = '⟳ Syncing...';
+            
+            // Only save to cloud, don't load (loading would overwrite local changes)
+            await syncToGoogleSheets();
+            
+            button.disabled = false;
+            button.textContent = '↻ Sync Now';
+        }
+        }
+
+        // Initialize - load from Google Sheets on page load
+        async function init() {
+            if (ENABLE_GOOGLE_SYNC) {
+                updateSyncStatus('Checking cloud...');
+                await loadFromGoogleSheets();
+            } else {
+                updateSyncStatus('Local only (sync not configured)');
+            }
+            
+            renderSchedule();
+            updateStats();
+        }
+
+        // Call init when page loads
+        init();
+    </script>
+</body>
+</html>
